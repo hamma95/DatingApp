@@ -1,30 +1,46 @@
-﻿using API.Data;
+﻿using API.DTOs;
 using API.Entities;
+using API.Repositories;
+using API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")] // /api/users
-public class UsersController : ControllerBase
+[Authorize]
+public class UsersController : BaseApiController
 {
-    private readonly DataContext _context;
+    private readonly IUserRepository _userRepository;
+    private readonly UserService userService;
 
-    public UsersController(DataContext context)
+    public UsersController(IUserRepository userRepository, UserService userService)
     {
-        _context = context;
+        this._userRepository = userRepository;
+        this.userService = userService;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+    public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers([FromQuery] UserFilters userFilters)
     {
-        return await _context.Users.ToListAsync();
+        return Ok(await _userRepository.GetUsers(userFilters));
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<AppUser>> GetUser(int id)
     {
-        return await _context.Users.FindAsync(id);
+        return await _userRepository.GetUser(id);
+    }
+    
+    [HttpPost("Create")]
+    public async Task<ActionResult<AppUser>> CreateUser(CreateUserDto newUser)
+    {
+        if (newUser is null)
+            return BadRequest("No data provided");
+        var user = await userService.CreateUser(newUser: newUser);
+        if (user == null)
+        {
+            return BadRequest("Invalid Data");
+        }
+        return CreatedAtAction(nameof(CreateUser), new { Id = user.Id }, user);
     }
 }
