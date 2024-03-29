@@ -1,0 +1,56 @@
+
+######################
+## ASP.NET
+######################
+
+# Built Debug/Release
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+
+# Visual Studio cache/options directory
+.vs/
+
+# Use this file for Rider
+## JetBrains
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+######################
+## SQLite
+######################
+
+# SQLite Database files
+*.db
+*.sqlite
+
+# Test files
+*.tlog
+*.log
+*.diff
+*.dat
+*.csv
+*.svg
+*.json
+*.xml
+*.html
+*.txt
+
+######################
+## Entity Framework
+######################
+
+# If you're storing the SQL Server Express user instance database in the
+# project folder and using Entity Framework Migrations, you should ignore these files.
+App_Data/
+*.mdf
+*.ldf
+*.sdf
+
+# Ignore Entity Framework *.bak migration files.
+*.bak
